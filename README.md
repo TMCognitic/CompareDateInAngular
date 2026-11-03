@@ -1,59 +1,57 @@
-# MyApp
+# MyApp — POC de formulaire Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.5.
+Ce dépôt contient un **POC (Proof of Concept)** autour des formulaires basés sur les signaux d’Angular. L’objectif est de valider une saisie de dates, des règles de validation et l’envoi des données vers une API locale. Il s’agit d’une démonstration technique, pas encore d’un formulaire prêt pour la production.
 
-## Development server
+## Ce que démontre le POC
 
-To start a local development server, run:
+Le composant [`TestForm`](./src/app/components/test-form/test-form.ts) expose deux champs :
 
-```bash
-ng serve
+- **Hire Date** : date obligatoire, initialisée à la date du jour (minuit UTC).
+- **End Date** : date facultative ; lorsqu’elle est renseignée, elle doit être postérieure à la date d’embauche.
+
+Le formulaire utilise les API Signal Forms d’Angular (`signal`, `form`, `FormField`, `FormRoot`) et le modèle [`DateCompareForm`](./src/Forms/DateCompareForm.ts). Les erreurs apparaissent après interaction avec le champ concerné et le bouton d’envoi est désactivé tant que le formulaire est invalide.
+
+À la soumission, les dates sont converties au format `YYYY-MM-DD` puis envoyées par une requête HTTP `POST` à `https://localhost:7215/Test`, avec un corps de la forme :
+
+```json
+{
+  "hireDate": "2026-11-03",
+  "endDate": null
+}
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La réponse et les erreurs réseau sont actuellement écrites dans la console du navigateur. Le point d’entrée de l’application affiche ce composant directement dans [`app.html`](./src/app/app.html).
 
-## Code scaffolding
+## Démarrer le POC
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Prérequis : Node.js et npm.
 
 ```bash
-ng generate --help
+npm install
+npm start
 ```
 
-## Building
+Ouvrir ensuite `http://localhost:4200/`. Pour tester l’envoi, l’API locale attendue doit être disponible sur `https://localhost:7215/Test`.
 
-To build the project run:
+> **À noter :** le composant injecte `HttpClient`, mais `provideHttpClient()` n’est pas encore enregistré dans [`app.config.ts`](./src/app/app.config.ts). Il faut configurer ce fournisseur pour que le composant puisse s’exécuter avec son intégration HTTP.
+
+## Limites du POC
+
+- L’URL de l’API est codée en dur ; aucune configuration par environnement n’est en place.
+- Il n’y a pas d’état de chargement, de confirmation visible ni de message d’erreur dans l’interface.
+- Le traitement HTTP et la gestion du cycle de soumission sont à consolider avant une utilisation réelle.
+- Le format envoyé ne transporte que la date (`YYYY-MM-DD`) ; il ne s’agit pas d’une date et heure.
+
+Ces limites sont intentionnelles dans le périmètre actuel : le POC sert d’abord à expérimenter le formulaire et ses validations.
+
+## Vérification
 
 ```bash
-ng build
+npm run build
+npm test
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Structure utile
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- [`src/app/components/test-form/`](./src/app/components/test-form/) : composant, template et styles du formulaire.
+- [`src/Forms/DateCompareForm.ts`](./src/Forms/DateCompareForm.ts) : type du modèle utilisé par le formulaire.

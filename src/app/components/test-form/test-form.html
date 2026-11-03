@@ -1,0 +1,23 @@
+<p>test-form works!</p>
+
+<form [formRoot]="theForm">
+    <label>Hire Date :
+        <input type="date" [formField]="theForm.hireDate"]>
+        @if(theForm.hireDate().touched() && theForm.hireDate().invalid())
+        {
+            @for (error of theForm.hireDate().errors(); track error.kind) { 
+                <p class="error">{{ error.message }}</p>
+            }
+        }
+    </label>
+    <label>End Date :
+        <input type="date" [formField]="theForm.endDate"]>
+        @if(theForm.endDate().touched() && theForm.endDate().invalid())
+        {
+            @for (error of theForm.endDate().errors(); track error.kind) { 
+                <p class="error">{{ error.message }}</p>
+            }
+        }
+    </label>
+    <button type="submit" [disabled]="theForm().invalid()" class="button">Envoyer</button>
+</form>
