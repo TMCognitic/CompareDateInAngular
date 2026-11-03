@@ -33,7 +33,7 @@ npm start
 
 Ouvrir ensuite `http://localhost:4200/`. Pour tester l’envoi, l’API locale attendue doit être disponible sur `https://localhost:7215/Test`.
 
-> **À noter :** le composant injecte `HttpClient`, mais `provideHttpClient()` n’est pas encore enregistré dans [`app.config.ts`](./src/app/app.config.ts). Il faut configurer ce fournisseur pour que le composant puisse s’exécuter avec son intégration HTTP.
+Le client HTTP est configuré au niveau de l’application avec `provideHttpClient()` dans [`app.config.ts`](./src/app/app.config.ts), ce qui permet au composant d’injecter `HttpClient`.
 
 ## Limites du POC
 
